@@ -1,0 +1,48 @@
+<?php
+    use Baldwin\UrlDataIntegrityChecker\Storage\Meta as MetaStorage;
+    use Baldwin\UrlDataIntegrityChecker\Block\Adminhtml\Metadata as MetadataBlock;
+
+    /** @var MetadataBlock $block */
+    $metadata = $block->getMetadata();
+?>
+<style>
+    .data-integrity-meta-data dl {
+        display: grid;
+        grid-template-columns: max-content auto;
+    }
+
+    .data-integrity-meta-data dt {
+        grid-column-start: 1;
+    }
+
+    .data-integrity-meta-data dd {
+        grid-column-start: 2;
+    }
+</style>
+<div class="data-integrity-meta-data" style="float: left">
+    <?php if (isset($metadata['status'])): ?>
+    <h2><?= $block->escapeHtml(__('Info')) ?></h2>
+    <dl>
+        <dt><?= $block->escapeHtml(__('Status')) ?>:</dt>
+        <dd><?= $block->escapeHtml($metadata['status'] ?? '') ?></dd>
+        <?php if ($metadata['status'] !== MetaStorage::STATUS_PENDING): ?>
+            <dt><?= $block->escapeHtml(__('Started refreshing')) ?>:</dt>
+            <dd><?= $block->escapeHtml($metadata['started'] ?? '') ?></dd>
+            <?php if (isset($metadata['finished'])): ?>
+                <dt><?= $block->escapeHtml(__('Finished refreshing')) ?>:</dt>
+                <dd><?= $block->escapeHtml($metadata['finished'] ?? '') ?></dd>
+            <?php endif; ?>
+            <?php if (isset($metadata['execution_time'])): ?>
+                <dt><?= $block->escapeHtml(__('Execution time')) ?>:</dt>
+                <dd><?= $block->escapeHtml($metadata['execution_time'] ?? '') ?></dd>
+            <?php endif; ?>
+        <?php endif; ?>
+        <dt><?= $block->escapeHtml(__('Initiator')) ?>:</dt>
+        <dd><?= $block->escapeHtml($metadata['initiator'] ?? '') ?></dd>
+        <?php if (isset($metadata['error']) && $metadata['error'] !== ''): ?>
+            <dt><?= $block->escapeHtml(__('Error')) ?>:</dt>
+            <dd><?= $block->escapeHtml($metadata['error'] ?? '') ?></dd>
+        <?php endif; ?>
+    </dl>
+    <?php endif; ?>
+</div>

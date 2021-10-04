@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Baldwin\UrlDataIntegrityChecker\Storage\StorageInterface" type="Baldwin\UrlDataIntegrityChecker\Storage\FileStorage" />
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="baldwin_urldataintegritychecker_console_command_checkproducturlkeys"   xsi:type="object">Baldwin\UrlDataIntegrityChecker\Console\Command\CheckProductUrlKeys</item>
+                <item name="baldwin_urldataintegritychecker_console_command_checkproducturlpaths"  xsi:type="object">Baldwin\UrlDataIntegrityChecker\Console\Command\CheckProductUrlPaths</item>
+                <item name="baldwin_urldataintegritychecker_console_command_checkcategoryurlkeys"  xsi:type="object">Baldwin\UrlDataIntegrityChecker\Console\Command\CheckCategoryUrlKeys</item>
+                <item name="baldwin_urldataintegritychecker_console_command_checkcategoryurlpaths" xsi:type="object">Baldwin\UrlDataIntegrityChecker\Console\Command\CheckCategoryUrlPaths</item>
+                <!-- <item name="baldwin_urldataintegritychecker_console_command_checkurlrewrites"      xsi:type="object">Baldwin\UrlDataIntegrityChecker\Console\Command\CheckUrlRewrites</item> -->
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="baldwin_urldataintegritychecker_grid_catalog_category_urlkey_data_source" xsi:type="string">Baldwin\UrlDataIntegrityChecker\Model\ResourceModel\Catalog\Category\UrlKeyCollection</item>
+                <item name="baldwin_urldataintegritychecker_grid_catalog_category_urlpath_data_source" xsi:type="string">Baldwin\UrlDataIntegrityChecker\Model\ResourceModel\Catalog\Category\UrlPathCollection</item>
+                <item name="baldwin_urldataintegritychecker_grid_catalog_product_urlkey_data_source" xsi:type="string">Baldwin\UrlDataIntegrityChecker\Model\ResourceModel\Catalog\Product\UrlKeyCollection</item>
+                <item name="baldwin_urldataintegritychecker_grid_catalog_product_urlpath_data_source" xsi:type="string">Baldwin\UrlDataIntegrityChecker\Model\ResourceModel\Catalog\Product\UrlPathCollection</item>
+            </argument>
+        </arguments>
+    </type>
+    <!--
+    We need to proxy the creating of a DateTime object,
+    because it tries to talk to the database and we don't want that to happen already when injecting this argument in a constructor,
+    it breaks running integration tests for example
+    See: https://github.com/baldwin-agency/magento2-module-url-data-integrity-checker/issues/2
+    -->
+    <type name="Baldwin\UrlDataIntegrityChecker\Storage\Meta">
+        <arguments>
+            <argument name="dateTime" xsi:type="object">\Magento\Framework\Stdlib\DateTime\DateTime\Proxy</argument>
+        </arguments>
+    </type>
+</config>
